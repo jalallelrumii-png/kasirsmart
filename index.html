@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- PWA Identity -->
+    <title>Kasir iOS Pro</title>
+    <link rel="manifest" href="manifest.json">
+
+    <!-- iOS Specific (biar pas diinstall di iPhone) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kasir Pro">
+    <link rel="apple-touch-icon" href="icons/apple-icon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER iOS -->
+        <header class="ios-header">
+            <h1 class="app-title">Kasir<span>.Pro</span></h1>
+            <div class="header-actions">
+                <button id="btnLaporan" class="ios-button header-btn">📊</button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT: KASIR -->
+        <main class="main-content">
+            <!-- Kolom Kiri: Daftar Produk -->
+            <section class="product-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Cari produk..." class="ios-input">
+                </div>
+                <div class="category-filter">
+                    <button class="category-btn active" data-cat="all">Semua</button>
+                    <button class="category-btn" data-cat="makanan">Makanan</button>
+                    <button class="category-btn" data-cat="minuman">Minuman</button>
+                    <button class="category-btn" data-cat="snack">Snack</button>
+                </div>
+                <div id="productList" class="product-grid">
+                    <!-- Produk akan di-load lewat JS -->
+                </div>
+            </section>
+
+            <!-- Kolom Kanan: Keranjang -->
+            <section class="cart-section">
+                <h2>🛒 Keranjang</h2>
+                <div id="cartItems" class="cart-items">
+                    <!-- Item keranjang akan dirender di sini -->
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Total Item</span>
+                        <span id="totalItems">0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total Harga</span>
+                        <span id="totalHarga">Rp 0</span>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button id="bayarBtn" class="ios-button primary bayar-btn">Bayar</button>
+                    <button id="resetBtn" class="ios-button secondary">Reset</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal untuk Bayar -->
+        <div id="modalBayar" class="ios-modal">
+            <div class="modal-content">
+                <h3>Pembayaran</h3>
+                <p>Total Belanja: <strong id="modalTotal">Rp 0</strong></p>
+                <input type="number" id="jumlahBayar" class="ios-input" placeholder="Jumlah bayar" autofocus>
+                <p>Kembalian: <strong id="kembalian">Rp 0</strong></p>
+                <div class="modal-actions">
+                    <button id="prosesBayarBtn" class="ios-button primary">Proses</button>
+                    <button id="tutupModalBtn" class="ios-button secondary">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="app.js"></script>
+</body>
+</html>
