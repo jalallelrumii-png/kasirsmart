@@ -1,117 +1,406 @@
-/* Tambahan style untuk navigasi */
-.header-nav {
-    display: flex;
-    gap: 10px;
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
-.nav-btn {
-    background: transparent;
+body {
+    background-color: #f2f2f7;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+.app-container {
+    width: 100%;
+    max-width: 1400px;
+    background-color: #f2f2f7;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+/* ===== HEADER iOS ===== */
+.ios-header {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 50px 30px 20px 30px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.app-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #000;
+}
+.app-title span {
+    color: #007aff;
+    font-weight: 400;
+}
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+.ios-button.header-btn {
+    background: #007aff;
+    color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #666;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,122,255,0.3);
+    transition: 0.2s;
+}
+/* ===== BOTTOM NAVIGATION ala iOS ===== */
+.bottom-nav {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px 25px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #8e8e93;
+    font-size: 12px;
     cursor: pointer;
     transition: 0.2s;
 }
-
-.nav-btn.active {
+.nav-item.active {
+    color: #007aff;
+}
+.nav-item span {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+/* ===== VIEW CONTAINER ===== */
+.view {
+    display: none;
+    padding: 20px;
+    flex: 1;
+}
+.view.active {
+    display: block;
+}
+/* ===== KASIR VIEW ===== */
+.kasir-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+}
+.product-section {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.03);
+    height: fit-content;
+}
+.search-bar {
+    margin-bottom: 15px;
+}
+.ios-input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #e5e5ea;
+    border-radius: 30px;
+    font-size: 16px;
+    background: #f9f9f9;
+    transition: 0.2s;
+}
+.ios-input:focus {
+    outline: none;
+    border-color: #007aff;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+}
+.category-filter {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.category-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 30px;
+    background: #f2f2f7;
+    color: #007aff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.category-btn.active {
     background: #007aff;
     color: white;
 }
-
-/* Manajemen produk */
-.product-management {
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 5px;
+}
+.product-card {
+    background: #f9f9f9;
+    border-radius: 18px;
+    padding: 16px 10px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.02);
+    transition: 0.2s;
+    cursor: pointer;
+}
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,122,255,0.15);
+    background: white;
+}
+.product-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+.product-price {
+    color: #007aff;
+    font-weight: 700;
+    font-size: 17px;
+}
+.product-stock {
+    font-size: 12px;
+    color: #8e8e93;
+    margin-top: 6px;
+}
+.cart-section {
     background: white;
     border-radius: 24px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.03);
+    height: fit-content;
+    position: sticky;
+    top: 130px;
 }
-
-.management-header {
+.cart-items {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+.cart-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f2f2f7;
 }
-
-.product-table, .report-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.product-table th, .report-table th {
-    text-align: left;
-    padding: 12px;
-    background: #f2f2f7;
-    color: #3a3a3c;
+.cart-item-info h4 {
+    font-size: 16px;
     font-weight: 600;
 }
-
-.product-table td, .report-table td {
-    padding: 12px;
-    border-bottom: 1px solid #e5e5ea;
+.cart-item-info p {
+    font-size: 14px;
+    color: #007aff;
+    font-weight: 500;
+    margin-top: 2px;
 }
-
-.product-table button, .report-table button {
-    background: none;
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.cart-item-actions button {
+    background: #f2f2f7;
     border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
     font-size: 18px;
+    font-weight: 600;
+    color: #007aff;
     cursor: pointer;
-    margin: 0 5px;
-    padding: 8px;
-    border-radius: 20px;
+}
+.cart-summary {
+    background: #f9f9f9;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    color: #3a3a3c;
+}
+.summary-row.total {
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+    border-top: 1px dashed #ccc;
+    margin-top: 8px;
+    padding-top: 12px;
+}
+.cart-actions {
+    display: flex;
+    gap: 12px;
+}
+.ios-button {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
     transition: 0.2s;
 }
-
-.product-table button.edit-btn {
+.ios-button.primary {
+    background: #007aff;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,122,255,0.4);
+}
+.ios-button.secondary {
+    background: #e5e5ea;
     color: #007aff;
-    background: rgba(0,122,255,0.1);
 }
-
-.product-table button.delete-btn {
-    color: #ff3b30;
-    background: rgba(255,59,48,0.1);
-}
-
-.report-table button.print-btn {
-    color: #34c759;
-    background: rgba(52,199,89,0.1);
-}
-
-/* Report section */
-.report-section {
-    background: white;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-}
-
-.report-header {
+/* ===== PRODUK VIEW ===== */
+.produk-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
-
-.report-actions {
+.btn-tambah {
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
 }
-
-/* Struk modal */
-.struk-content {
-    max-width: 300px;
+.table-produk {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    overflow-x: auto;
 }
-
-.struk-detail {
-    font-family: monospace;
-    font-size: 12px;
-    margin: 20px 0;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    white-space: pre-wrap;
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th {
+    text-align: left;
+    padding: 12px 8px;
+    color: #8e8e93;
+    font-weight: 500;
+    border-bottom: 1px solid #e5e5ea;
+}
+td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f2f2f7;
+}
+.action-btns {
+    display: flex;
+    gap: 8px;
+}
+.action-btns button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+/* ===== LAPORAN VIEW ===== */
+.laporan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.btn-excel, .btn-pdf {
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-pdf {
+    background: #ff3b30;
+}
+.total-omzet {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 600;
+}
+.table-laporan {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    overflow-x: auto;
+}
+/* ===== MODAL ===== */
+.ios-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: white;
+    border-radius: 28px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+}
+.modal-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+/* ===== PRINT STYLE ===== */
+@media print {
+    .no-print, .bottom-nav, .ios-header { display: none; }
+    body { background: white; }
+    .struk-print { font-size: 12px; }
 }
