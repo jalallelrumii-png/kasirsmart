@@ -3,33 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-    <!-- PWA Identity -->
     <title>Kasir iOS Pro</title>
     <link rel="manifest" href="manifest.json">
-
-    <!-- iOS Specific (biar pas diinstall di iPhone) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Kasir Pro">
     <link rel="apple-touch-icon" href="icons/apple-icon.png">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- HEADER iOS -->
         <header class="ios-header">
             <h1 class="app-title">Kasir<span>.Pro</span></h1>
-            <div class="header-actions">
-                <button id="btnLaporan" class="ios-button header-btn">📊</button>
+            <div class="header-nav">
+                <button class="nav-btn active" data-view="kasir">🧾 Kasir</button>
+                <button class="nav-btn" data-view="produk">📦 Produk</button>
+                <button class="nav-btn" data-view="laporan">📊 Laporan</button>
             </div>
         </header>
 
-        <!-- MAIN CONTENT: KASIR -->
-        <main class="main-content">
-            <!-- Kolom Kiri: Daftar Produk -->
+        <!-- VIEW KASIR -->
+        <main class="main-content view" id="viewKasir">
+            <!-- Konten kasir (sama seperti sebelumnya) -->
             <section class="product-section">
                 <div class="search-bar">
                     <input type="text" id="searchInput" placeholder="Cari produk..." class="ios-input">
@@ -40,17 +35,11 @@
                     <button class="category-btn" data-cat="minuman">Minuman</button>
                     <button class="category-btn" data-cat="snack">Snack</button>
                 </div>
-                <div id="productList" class="product-grid">
-                    <!-- Produk akan di-load lewat JS -->
-                </div>
+                <div id="productList" class="product-grid"></div>
             </section>
-
-            <!-- Kolom Kanan: Keranjang -->
             <section class="cart-section">
                 <h2>🛒 Keranjang</h2>
-                <div id="cartItems" class="cart-items">
-                    <!-- Item keranjang akan dirender di sini -->
-                </div>
+                <div id="cartItems" class="cart-items"></div>
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Total Item</span>
@@ -62,13 +51,70 @@
                     </div>
                 </div>
                 <div class="cart-actions">
-                    <button id="bayarBtn" class="ios-button primary bayar-btn">Bayar</button>
+                    <button id="bayarBtn" class="ios-button primary">Bayar</button>
                     <button id="resetBtn" class="ios-button secondary">Reset</button>
                 </div>
             </section>
         </main>
 
-        <!-- Modal untuk Bayar -->
+        <!-- VIEW PRODUK (Manajemen Produk) -->
+        <main class="main-content view" id="viewProduk" style="display: none;">
+            <section class="product-management">
+                <div class="management-header">
+                    <h2>Manajemen Produk</h2>
+                    <button id="tambahProdukBtn" class="ios-button primary">+ Tambah Produk</button>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchProdukInput" placeholder="Cari produk..." class="ios-input">
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kategori</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <!-- diisi js -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- VIEW LAPORAN (Riwayat Transaksi) -->
+        <main class="main-content view" id="viewLaporan" style="display: none;">
+            <section class="report-section">
+                <div class="report-header">
+                    <h2>Riwayat Transaksi</h2>
+                    <div class="report-actions">
+                        <button id="exportExcelBtn" class="ios-button primary">📥 Export Excel</button>
+                        <button id="cetakLaporanBtn" class="ios-button secondary">🖨️ Cetak Laporan</button>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchLaporanInput" placeholder="Cari transaksi..." class="ios-input">
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tanggal</th>
+                            <th>Total Item</th>
+                            <th>Total Harga</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <!-- diisi js -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- MODAL Bayar -->
         <div id="modalBayar" class="ios-modal">
             <div class="modal-content">
                 <h3>Pembayaran</h3>
@@ -81,9 +127,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL Tambah/Edit Produk -->
+        <div id="modalProduk" class="ios-modal">
+            <div class="modal-content">
+                <h3 id="modalProdukTitle">Tambah Produk</h3>
+                <input type="text" id="produkNama" class="ios-input" placeholder="Nama Produk">
+                <select id="produkKategori" class="ios-input">
+                    <option value="makanan">Makanan</option>
+                    <option value="minuman">Minuman</option>
+                    <option value="snack">Snack</option>
+                </select>
+                <input type="number" id="produkHarga" class="ios-input" placeholder="Harga">
+                <input type="number" id="produkStok" class="ios-input" placeholder="Stok">
+                <div class="modal-actions">
+                    <button id="simpanProdukBtn" class="ios-button primary">Simpan</button>
+                    <button id="batalProdukBtn" class="ios-button secondary">Batal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL Cetak Struk / Detail Transaksi -->
+        <div id="modalStruk" class="ios-modal">
+            <div class="modal-content struk-content">
+                <h3>Struk Pembayaran</h3>
+                <div id="detailTransaksi"></div>
+                <div class="modal-actions">
+                    <button id="cetakStrukBtn" class="ios-button primary">🖨️ Cetak</button>
+                    <button id="tutupStrukBtn" class="ios-button secondary">Tutup</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- JS -->
     <script src="app.js"></script>
 </body>
 </html>
