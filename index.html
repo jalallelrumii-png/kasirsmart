@@ -1,1 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kasir Pro iOS</title>
+    <!-- PWA Meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kasir Pro">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-icon.png">
+    <!-- Library untuk Excel & PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <!-- CSS Eksternal -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="ios-header">
+            <h1 class="app-title">Kasir<span>.Pro</span></h1>
+            <div class="header-actions">
+                <button class="ios-button header-btn" id="syncBtn">🔄</button>
+            </div>
+        </header>
 
+        <!-- VIEW KASIR -->
+        <div id="kasir-view" class="view active">
+            <div class="kasir-layout">
+                <!-- Kiri: Produk -->
+                <section class="product-section">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="🔍 Cari produk..." class="ios-input">
+                    </div>
+                    <div class="category-filter">
+                        <button class="category-btn active" data-cat="all">🍽️ Semua</button>
+                        <button class="category-btn" data-cat="makanan">🍚 Makanan</button>
+                        <button class="category-btn" data-cat="minuman">🥤 Minuman</button>
+                        <button class="category-btn" data-cat="snack">🍿 Snack</button>
+                    </div>
+                    <div id="productList" class="product-grid"></div>
+                </section>
+
+                <!-- Kanan: Keranjang -->
+                <section class="cart-section">
+                    <h2>🛒 Keranjang</h2>
+                    <div id="cartItems" class="cart-items"></div>
+                    <div class="cart-summary">
+                        <div class="summary-row"><span>Total Item</span><span id="totalItems">0</span></div>
+                        <div class="summary-row total"><span>Total Harga</span><span id="totalHarga">Rp 0</span></div>
+                    </div>
+                    <div class="cart-actions">
+                        <button id="bayarBtn" class="ios-button primary">💰 Bayar</button>
+                        <button id="resetBtn" class="ios-button secondary">🔄 Reset</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- VIEW PRODUK (Manajemen) -->
+        <div id="produk-view" class="view">
+            <div class="produk-header">
+                <h2>📦 Manajemen Produk</h2>
+                <button class="btn-tambah" onclick="openProdukModal()"><span>➕</span> Tambah Produk</button>
+            </div>
+            <div class="table-produk">
+                <table id="produkTable">
+                    <thead>
+                        <tr><th>Nama</th><th>Harga</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody id="produkTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW LAPORAN -->
+        <div id="laporan-view" class="view">
+            <div class="laporan-header">
+                <h2>📊 Laporan Penjualan</h2>
+                <div>
+                    <button class="btn-excel" id="exportExcelBtn"><span>📎</span> Export Excel</button>
+                    <button class="btn-pdf" id="exportPdfBtn"><span>📄</span> Export PDF</button>
+                </div>
+            </div>
+            <div class="total-omzet">
+                <span>Total Omzet:</span>
+                <span id="totalOmzet">Rp 0</span>
+            </div>
+            <div class="table-laporan">
+                <table id="laporanTable">
+                    <thead>
+                        <tr><th>ID</th><th>Tanggal</th><th>Item</th><th>Total</th><th>Bayar</th><th>Kembali</th><th>Struk</th></tr>
+                    </thead>
+                    <tbody id="laporanTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-view="kasir-view"><span>🏠</span> Kasir</div>
+            <div class="nav-item" data-view="produk-view"><span>📦</span> Produk</div>
+            <div class="nav-item" data-view="laporan-view"><span>📊</span> Laporan</div>
+        </nav>
+
+        <!-- MODAL BAYAR -->
+        <div id="modalBayar" class="ios-modal">
+            <div class="modal-content">
+                <h3>💵 Pembayaran</h3>
+                <p>Total: <strong id="modalTotal">Rp 0</strong></p>
+                <input type="number" id="jumlahBayar" class="ios-input" placeholder="Jumlah bayar" autofocus>
+                <p>Kembalian: <strong id="kembalian">Rp 0</strong></p>
+                <div class="modal-actions">
+                    <button id="prosesBayarBtn" class="ios-button primary">Proses</button>
+                    <button id="tutupModalBtn" class="ios-button secondary">Tutup</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL PRODUK (Tambah/Edit) -->
+        <div id="modalProduk" class="ios-modal">
+            <div class="modal-content">
+                <h3 id="modalProdukTitle">➕ Tambah Produk</h3>
+                <input type="text" id="produkNama" class="ios-input" placeholder="Nama Produk">
+                <input type="number" id="produkHarga" class="ios-input" placeholder="Harga Jual">
+                <select id="produkKategori" class="ios-input">
+                    <option value="makanan">Makanan</option>
+                    <option value="minuman">Minuman</option>
+                    <option value="snack">Snack</option>
+                </select>
+                <input type="number" id="produkStok" class="ios-input" placeholder="Stok">
+                <div class="modal-actions">
+                    <button id="simpanProdukBtn" class="ios-button primary">Simpan</button>
+                    <button id="batalProdukBtn" class="ios-button secondary">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+    <!-- JS Eksternal -->
+    <script src="app.js"></script>
+</body>
+</html>
