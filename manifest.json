@@ -1,7 +1,7 @@
 {
-  "name": "Kasir iOS Pro",
+  "name": "Kasir Pro iOS",
   "short_name": "KasirPro",
-  "description": "Aplikasi Kasir Profesional dengan Desain iOS - Solusi UMKM",
+  "description": "Aplikasi Kasir Profesional dengan Desain iOS",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f2f2f7",
