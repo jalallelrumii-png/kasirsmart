@@ -5,12 +5,11 @@ const urlsToCache = [
   '/style.css',
   '/app.js',
   '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/apple-icon.png'
+  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js'
 ];
 
-// Install service worker dan cache semua aset
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,22 +20,18 @@ self.addEventListener('install', event => {
   );
 });
 
-// Intercept fetch requests
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Kalo ada di cache, balikin dari cache
         if (response) {
           return response;
         }
-        // Kalo ga ada, fetch dari network
         return fetch(event.request);
       })
   );
 });
 
-// Hapus cache lama saat aktivasi baru
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
